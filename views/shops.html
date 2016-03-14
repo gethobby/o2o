@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>商家页</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        function getCookie(){
+            var result = {};
+            var arr = document.cookie.split(";");
+            arr.map(function(a){
+                var cache = a.split('=');
+                result[cache[0].trim()] = cache[1].trim();
+            });
+            return result;
+        }
+        var ids = {}; // 用户socket id集合
+        var messages ={}; // 收到的内容集合
+        var tels= {};// 收到的电话集合
+        var names = {};// 收到的用户名集合
+        var currtid  ; // 当前用户socket id;
+        
+        var params = getCookie();
+        var socket = io.connect();
+        socket.on('connect',function(){
+            console.log('连接成功');
+        });
+        socket.on('message', function (data) {
+            console.log('收到消息:'+JSON.stringify(data));
+            switch (data.cmd) {
+                case "rec": // 接受服务推送的用户选单信息，并显示
+     
+                var options = document.getElementById("selectOrder");
+                document.getElementById("selectOrder").options.length=0;
+                ids = data.data.ids;
+                messages=data.data.messages;
+                tels = data.data.tels;
+                names = data.data.names;
+                    for(var i in names)   {
+                        var opp = new Option(names[i],i );
+                        options.add(opp);
+                    }
+                var id = document.getElementById("selectOrder").value;  
+                currtid = ids[id];   
+                console.log("当前id:===== "+currtid);  
+                document.getElementById("receiveTxt").value = messages[id];
+                document.getElementById("userTel").value =tels[id];
+                document.getElementById("userName").value =names[id];  
+                break;
+                }
+        });
+        function sendMessage(){
+             console.log(currtid);
+            alert("接单成功！") ;
+            // 向服务器推送，接受了该用户的点单请求
+            socket.send({cmd:"ok",data:{id:currtid,message:"接单成功！"}});
+        }
+      function selectChange(){
+       var id = document.getElementById("selectOrder").value;   
+       currtid = ids[id];     
+       document.getElementById("receiveTxt").value = messages[id];
+       document.getElementById("userTel").value =tels[id];
+       document.getElementById("userName").value =names[id];
+  }
+    </script>
+</head>
+<body>
+<h2>商家页</h2>
+<div id="shop">
+    <table align="center" border="1">
+        <!--lable>发送到</lable><input type="text" id="sender"-->
+        <tr><td>订单列表</td><td><select id="selectOrder"  onchange="selectChange()"></select></td></tr>
+        <tr><td><button onclick="sendMessage()">接单</button></td><td><button onclick="cancelMessage()">取消</button></td></tr>
+        <tr><td><lable>收到的内容</lable></td><td>
+            <div>
+                <textarea type="text" id="receiveTxt"></textarea>
+            </div>
+        </td></tr>
+        <tr><td><lable>用户电话</lable></td><td><input type="text" id="userTel"></td></tr>
+        <tr><td><lable>收到的用户</lable></td><td><input type="text" id="userName"></td></tr>
+    </table>
+</div>
+</body>
+</html>

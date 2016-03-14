@@ -1,0 +1,11 @@
+{
+  "zhangfeng":{ "pwd_s":"password","role":1,"service": "洗衣服"},
+  "tangcaizhi":{ "pwd_s":"password","role":1,"service":"做饭"},
+  "tangcaizhi2":{ "pwd_s":"password","role":1,"service":"拖地"},
+  "tangcaizhi3":{ "pwd_s":"password","role":1,"service":"买菜"},  
+  "ligen":{ "pwd_u":"123456","role":2,"tel":"1370001" },
+  "ligen2":{ "pwd_u":"123456","role":2,"tel":"1370002" },
+  "ligen3":{ "pwd_u":"123456","role":2,"tel":"1370003" },
+  "ligen4":{ "pwd_u":"123456","role":2,"tel":"1370004" },
+  "ligen5":{ "pwd_u":"123456","role":2,"tel":"1370005" }
+}
